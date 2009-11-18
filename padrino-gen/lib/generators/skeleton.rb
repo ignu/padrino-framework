@@ -2,7 +2,7 @@ require 'thor'
 
 module Padrino
   module Generators
-    class Project < Thor::Group
+    class Skeleton < Thor::Group
       # Define the source template root
       def self.source_root; File.dirname(__FILE__); end
       def self.banner; "padrino-gen project [name] [path] [options]"; end
@@ -29,7 +29,7 @@ module Padrino
       def setup_skeleton
         self.destination_root = File.join(path, name)
         @class_name = name.classify
-        directory("project/", self.destination_root)
+        directory("skeleton/", self.destination_root)
         store_component_config('.components')
       end
 

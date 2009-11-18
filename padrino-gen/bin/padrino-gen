@@ -6,7 +6,6 @@ generator_kind = ARGV.delete_at(0)
 arguments = ARGV.any? ? ARGV : ['-h']
 
 case generator_kind
-  when /project/ then Padrino::Generators::Project.start(arguments)
-  when /app/     then Padrino::Generators::Application.start(arguments)
+  when /app/     then Padrino::Generators::Skeleton.start(arguments)
   else puts "Please select a valid generator_type" # TODO list out generator types here (perhaps created generator type definitions)
 end

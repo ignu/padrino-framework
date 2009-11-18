@@ -10,9 +10,15 @@ class TestSkeletonGenerator < Test::Unit::TestCase
     should "allow simple generator to run and create base_app with no options" do
       assert_nothing_raised { silence_logger { Padrino::Generators::Skeleton.start(['sample_app', '/tmp', '--script=none']) } }
       assert File.exist?('/tmp/sample_app')
-      assert File.exist?('/tmp/sample_app/apps')
+      assert File.exist?('/tmp/sample_app/app')
       assert File.exist?('/tmp/sample_app/config/boot.rb')
       assert File.exist?('/tmp/sample_app/test/test_config.rb')
+    end
+    should "place app specific names into correct files" do
+      silence_logger { Padrino::Generators::Skeleton.start(['sample_app', '/tmp', '--script=none']) }
+      assert_match_in_file(/class SampleApp < Padrino::Application/m, '/tmp/sample_app/app.rb')
+      assert_match_in_file(/Padrino.mount_core\(:app_class => "SampleApp"\)/m, '/tmp/sample_app/config/apps.rb')
+      assert_match_in_file(/SampleApp::urls do/m, '/tmp/sample_app/config/urls.rb')
     end
     should "create components file containing options chosen with defaults" do
       silence_logger { Padrino::Generators::Skeleton.start(['sample_app', '/tmp']) }
