@@ -2,20 +2,20 @@ require 'thor'
 
 module Padrino
   module Generators
-    class Skeleton < Thor::Group
+    class Project < Thor::Group
       # Define the source template root
       def self.source_root; File.dirname(__FILE__); end
-      def self.banner; "padrino-gen [app_name] [path] [options]"; end
+      def self.banner; "padrino-gen project [name] [path] [options]"; end
 
       # Include related modules
       include Thor::Actions
       include Padrino::Generators::Actions
       include Padrino::Generators::Components::Actions
 
-      desc "Description:\n\n\tpadrino-gen generate a Padrino skeleton or application."
+      desc "Description:\n\n\tpadrino-gen project generates a new Padrino project"
 
-      argument :name, :desc => "The name of your sinatra app"
-      argument :path, :desc => "The path to create your app"
+      argument :name, :desc => "The name of your padrino project"
+      argument :path, :desc => "The path to create your padrino project"
       class_option :run_bundler, :aliases => '-b', :default => false, :type => :boolean
 
       # Definitions for the available customizable components
@@ -25,7 +25,7 @@ module Padrino
       component_option :script,   "javascript library", :aliases => '-s', :choices => [:jquery, :prototype, :rightjs]
       component_option :renderer, "template engine",    :aliases => '-r', :choices => [:erb, :haml]
 
-      # Copies over the base sinatra starting application
+      # Copies over the base sinatra starting project
       def setup_skeleton
         self.destination_root = File.join(path, name)
         @class_name = name.classify
