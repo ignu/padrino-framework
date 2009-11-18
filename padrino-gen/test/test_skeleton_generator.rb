@@ -79,37 +79,36 @@ class TestSkeletonGenerator < Test::Unit::TestCase
       buffer = silence_logger { Padrino::Generators::Skeleton.start(['sample_app', '/tmp', '--orm=sequel', '--script=none']) }
       assert_match /Applying.*?sequel.*?orm/, buffer
       assert_match_in_file(/gem 'sequel'/, '/tmp/sample_app/Gemfile')
-      assert_match_in_file(/SequelInitializer/, '/tmp/sample_app/config/initializers/sequel.rb')
-      # assert_match_in_file(/class User < Sequel::Model/, '/tmp/sample_app/app/models/user.rb')
+      assert_match_in_file(/Sequel.connect/, '/tmp/sample_app/config/database.rb')
     end
 
     should "properly generate for activerecord" do
       buffer = silence_logger { Padrino::Generators::Skeleton.start(['sample_app', '/tmp', '--orm=activerecord', '--script=none']) }
       assert_match /Applying.*?activerecord.*?orm/, buffer
       assert_match_in_file(/gem 'activerecord'/, '/tmp/sample_app/Gemfile')
-      assert_match_in_file(/ActiveRecordInitializer/, '/tmp/sample_app/config/initializers/active_record.rb')
       assert_match_in_file(/Migrate the database/, '/tmp/sample_app/Rakefile')
+      assert_match_in_file(/ActiveRecord::Base.establish_connection/, '/tmp/sample_app/config/database.rb')
     end
 
     should "properly generate default for datamapper" do
       buffer = silence_logger { Padrino::Generators::Skeleton.start(['sample_app', '/tmp', '--orm=datamapper', '--script=none']) }
       assert_match /Applying.*?datamapper.*?orm/, buffer
       assert_match_in_file(/gem 'dm-core'/, '/tmp/sample_app/Gemfile')
-      assert_match_in_file(/DataMapperInitializer/, '/tmp/sample_app/config/initializers/data_mapper.rb')
+      assert_match_in_file(/DataMapper.setup/, '/tmp/sample_app/config/database.rb')
     end
 
     should "properly generate for mongomapper" do
       buffer = silence_logger { Padrino::Generators::Skeleton.start(['sample_app', '/tmp', '--orm=mongomapper', '--script=none']) }
       assert_match /Applying.*?mongomapper.*?orm/, buffer
       assert_match_in_file(/gem 'mongo_mapper'/, '/tmp/sample_app/Gemfile')
-      assert_match_in_file(/MongoDbInitializer/, '/tmp/sample_app/config/initializers/mongo_db.rb')
+      assert_match_in_file(/MongoMapper.database/, '/tmp/sample_app/config/database.rb')
     end
 
     should "properly generate for couchrest" do
       buffer = silence_logger { Padrino::Generators::Skeleton.start(['sample_app', '/tmp', '--orm=couchrest', '--script=none']) }
       assert_match /Applying.*?couchrest.*?orm/, buffer
       assert_match_in_file(/gem 'couchrest'/, '/tmp/sample_app/Gemfile')
-      assert_match_in_file(/CouchRestInitializer/, '/tmp/sample_app/config/initializers/couch_rest.rb')    
+      assert_match_in_file(/CouchRest.database!/, '/tmp/sample_app/config/database.rb')    
     end
   end
 
