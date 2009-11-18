@@ -5,7 +5,7 @@ module Padrino
 
     class Controller < Thor::Group
       # Define the source template root
-      def self.source_root; File.dirname(__FILE__); end
+      def self.source_root; File.expand_path(File.dirname(__FILE__)); end
       def self.banner; "padrino-gen controller [name]"; end
 
       # Include related modules
@@ -16,12 +16,13 @@ module Padrino
       desc "Description:\n\n\tpadrino-gen controller generates a new Padrino controller"
 
       argument :name, :desc => "The name of your padrino controller"
+      class_option :root, :aliases => '-r', :default => nil, :type => :string
 
       # Copies over the base sinatra starting project
       def create_controller
-        if in_app_root?
-          @app_name = fetch_app_name
-          template "templates/controller.rb.tt", "app/controllers/#{name}.rb"
+        if in_app_root?(options[:root])
+          @app_name = fetch_app_name(options[:root])
+          template "templates/controller.rb.tt", File.join(options[:root] || '.', "app/controllers/#{name}.rb")
         else
           say "You are not at the root of a Padrino application! (config/boot.rb not found)" and return unless in_app_root?
         end

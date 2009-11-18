@@ -57,13 +57,14 @@ module Padrino
       end
       
       # Returns true if inside a Padrino application
-      def in_app_root?
-        File.exist?('config/boot.rb')
+      def in_app_root?(path=nil)
+        path ? File.exist?(File.join(path, 'config/boot.rb')) : File.exist?('config/boot.rb')
       end
       
       # Returns the app_name for the application at root
-      def fetch_app_name
-        @app_name ||= File.read('app.rb').scan(/class\s(.*?)\s</).flatten[0]
+      def fetch_app_name(path=nil)
+        app_path = path ? File.join(path, 'app.rb') : 'app.rb'
+        @app_name ||= File.read(app_path).scan(/class\s(.*?)\s</).flatten[0]
       end
 
       module ClassMethods
