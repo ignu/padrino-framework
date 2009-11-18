@@ -5,6 +5,7 @@ Dir[File.dirname(__FILE__) + '/padrino-core/**/*.rb'].each {|file| require file 
 PADRINO_ENV = ENV["PADRINO_ENV"] ||= ENV["RACK_ENV"] ||= "development" unless defined?(PADRINO_ENV)
 
 module Padrino
+  class ApplicationLoadError < RuntimeError; end
 
   # Helper method for file references.
   #
@@ -14,20 +15,12 @@ module Padrino
   def self.root(*args)
     File.join(PADRINO_ROOT, *args)
   end
-  
-  # Returns the prepared rack application mapping each 'mounted' application
-  def self.application
-    Rack::Builder.new do
-      Padrino.mounted_apps.each do |app|
-        require(app.app_file)
-        app_klass = app.klass.constantize
-        map app.uri_root do
-          app_klass.set :uri_root, app.uri_root
-          app_klass.set :app_file, app.app_file
-          run app_klass
-        end
-      end
-    end
-  end
 
+  # Returns the resulting rack builder mapping each 'mounted' application
+  def self.application
+    raise ApplicationLoadError.new("At least one application must be mounted onto Padrino!") if self.mounted_apps.none?
+    builder = Rack::Builder.new
+    self.mounted_apps.each { |app| app.map_onto(builder) }
+    builder
+  end
 end
