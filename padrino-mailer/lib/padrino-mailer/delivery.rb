@@ -41,6 +41,7 @@ module Padrino
             # or it will not be interpreted correctly by client.
             body = TMail::Mail.new
             body.body = options[:body] || ""
+            mail.content_type = "multipart/mixed"
             body.content_type = options[:content_type] || "text/plain"
             mail.parts.push body
             (options[:attachments] || []).each do |name, body|
